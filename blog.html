@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ブログ | THE GREEN CHRONICLE</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --navy:   #1a4a6e;
+      --green:  #2d7a4f;
+      --red:    #b83232;
+      --cream:  #f8f7f4;
+      --ink:    #1c2b3a;
+      --muted:  #6b7c8d;
+      --border: #dde4ec;
+      --white:  #ffffff;
+    }
+
+    body {
+      font-family: 'Inter', 'Noto Sans JP', sans-serif;
+      background: var(--cream);
+      color: var(--ink);
+      font-size: 16px;
+      line-height: 1.7;
+    }
+
+    /* ─── NAV ─── */
+    nav {
+      background: var(--white);
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .nav-inner {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 0 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 56px;
+    }
+    .nav-logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--navy);
+      letter-spacing: 0.12em;
+      text-decoration: none;
+      text-transform: uppercase;
+    }
+    .nav-links {
+      display: flex;
+      gap: 28px;
+      list-style: none;
+    }
+    .nav-links a {
+      text-decoration: none;
+      font-size: 0.8rem;
+      font-weight: 500;
+      color: var(--muted);
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--green); }
+    .nav-links a.active { color: var(--navy); font-weight: 500; }
+
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+      background: none;
+      border: none;
+      padding: 4px;
+    }
+    .hamburger span {
+      display: block;
+      width: 22px;
+      height: 2px;
+      background: var(--navy);
+    }
+    .mobile-menu {
+      display: none;
+      background: var(--white);
+      border-top: 1px solid var(--border);
+      padding: 16px 24px 20px;
+    }
+    .mobile-menu.open { display: block; }
+    .mobile-menu a {
+      display: block;
+      padding: 10px 0;
+      text-decoration: none;
+      font-size: 0.88rem;
+      color: var(--ink);
+      border-bottom: 1px solid var(--border);
+    }
+    .mobile-menu a:last-child { border-bottom: none; }
+
+    /* ─── PAGE HEADER ─── */
+    .page-header {
+      max-width: 640px;
+      margin: 0 auto;
+      padding: 56px 24px 40px;
+      text-align: center;
+    }
+    .page-eyebrow {
+      font-size: 0.68rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--red);
+      font-weight: 500;
+      margin-bottom: 10px;
+    }
+    .page-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--navy);
+      margin-bottom: 12px;
+    }
+    .page-desc {
+      font-size: 0.86rem;
+      color: var(--muted);
+      font-weight: 300;
+      line-height: 1.8;
+    }
+    .page-rule {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      margin: 24px auto 0;
+    }
+    .page-rule::before,
+    .page-rule::after {
+      content: '';
+      display: block;
+      width: 60px;
+      height: 1px;
+      background: var(--border);
+    }
+    .dot-row { display: flex; gap: 6px; }
+    .dot-row span {
+      display: block;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+    }
+    .dot-row span:nth-child(1) { background: var(--navy); }
+    .dot-row span:nth-child(2) { background: var(--white); border: 1px solid var(--border); }
+    .dot-row span:nth-child(3) { background: var(--red); }
+    .dot-row span:nth-child(4) { background: var(--green); }
+
+    /* ─── FEED ─── */
+    .feed-wrap {
+      max-width: 640px;
+      margin: 0 auto;
+      padding: 0 24px 80px;
+    }
+
+    /* year divider */
+    .year-divider {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin: 40px 0 24px;
+    }
+    .year-divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+    .year-label {
+      font-family: 'Playfair Display', serif;
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--navy);
+      letter-spacing: 0.04em;
+    }
+
+    /* post */
+    .post {
+      display: grid;
+      grid-template-columns: 80px 1fr;
+      gap: 0 20px;
+      padding: 18px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .post:last-child { border-bottom: none; }
+
+    .post-date {
+      padding-top: 2px;
+      font-size: 0.7rem;
+      color: var(--muted);
+      letter-spacing: 0.04em;
+      line-height: 1.5;
+      white-space: nowrap;
+    }
+    .post-date .month-day {
+      display: block;
+      font-size: 0.78rem;
+      font-weight: 500;
+      color: var(--navy);
+    }
+
+    .post-body {
+      font-size: 0.9rem;
+      color: var(--ink);
+      font-weight: 300;
+      line-height: 1.85;
+    }
+
+    /* tag */
+    .post-tag {
+      display: inline-block;
+      margin-top: 8px;
+      font-size: 0.62rem;
+      letter-spacing: 0.08em;
+      padding: 2px 7px;
+      border-radius: 2px;
+      font-weight: 500;
+    }
+    .tag-us    { background: #e8f0f8; color: var(--navy); }
+    .tag-uk    { background: #e8f4ed; color: var(--green); }
+    .tag-multi { background: #faeaea; color: var(--red); }
+    .tag-ca    { background: #f0ede8; color: #7a5c2d; }
+    .tag-au    { background: #ede8f0; color: #5c2d7a; }
+    .tag-ie    { background: #e8f4ec; color: #1a6e3a; }
+
+    /* ─── FOOTER ─── */
+    footer {
+      background: var(--ink);
+      color: #8a9baa;
+      padding: 40px 24px;
+      text-align: center;
+    }
+    .footer-inner { max-width: 960px; margin: 0 auto; }
+    .footer-logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.1rem;
+      color: var(--white);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+    .footer-sub { font-size: 0.75rem; font-weight: 300; line-height: 1.7; }
+    .footer-links {
+      margin-top: 18px;
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      list-style: none;
+    }
+    .footer-links a {
+      font-size: 0.72rem;
+      color: #8a9baa;
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .footer-links a:hover { color: var(--white); }
+    .footer-copy {
+      margin-top: 20px;
+      font-size: 0.7rem;
+      color: #5a6b78;
+    }
+
+    /* ─── RESPONSIVE ─── */
+    @media (max-width: 700px) {
+      .nav-links { display: none; }
+      .hamburger { display: flex; }
+      .post { grid-template-columns: 64px 1fr; gap: 0 14px; }
+    }
+    @media (max-width: 480px) {
+      .post { grid-template-columns: 1fr; gap: 4px 0; }
+      .post-date { display: flex; gap: 8px; align-items: baseline; }
+      .post-date .month-day { font-size: 0.75rem; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-inner">
+    <a class="nav-logo" href="index.html">The Green Chronicle</a>
+    <ul class="nav-links">
+      <li><a href="index.html">ホーム</a></li>
+      <li><a href="blog.html" class="active">ブログ</a></li>
+      <li><a href="gallery.html">ギャラリー</a></li>
+      <li><a href="about.html">このサイトについて</a></li>
+    </ul>
+    <button class="hamburger" onclick="toggleMenu()" aria-label="メニュー">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+  <div class="mobile-menu" id="mobileMenu">
+    <a href="index.html">ホーム</a>
+    <a href="blog.html">ブログ</a>
+    <a href="gallery.html">ギャラリー</a>
+    <a href="about.html">このサイトについて</a>
+  </div>
+</nav>
+
+<!-- PAGE HEADER -->
+<header class="page-header">
+  <p class="page-eyebrow">Blog</p>
+  <h1 class="page-title">勉強の記録</h1>
+  <p class="page-desc">英語・英語圏文化の勉強日誌。<br>気づいたこと、面白かったこと、ひとことメモ。</p>
+  <div class="page-rule">
+    <div class="dot-row">
+      <span></span><span></span><span></span><span></span>
+    </div>
+  </div>
+</header>
+
+<!-- FEED -->
+<main class="feed-wrap">
+
+  <div class="year-divider">
+    <span class="year-label">2025</span>
+  </div>
+
+  <article class="post">
+    <div class="post-date">
+      <span class="month-day">01.15</span>
+      2025
+    </div>
+    <div class="post-body">
+      アイルランド英語の "grand" は「問題ない」「まあまあ」くらいの意味で使われることが多い。"It's grand." をアメリカ人に言うと少しトーンが違って聞こえるらしい。
+      <br><span class="post-tag tag-ie">🇮🇪 アイルランド</span>
+    </div>
+  </article>
+
+  <article class="post">
+    <div class="post-date">
+      <span class="month-day">01.10</span>
+      2025
+    </div>
+    <div class="post-body">
+      アイルランドの短編小説集を読み始めた。文章のリズムがアメリカの散文とかなり違う。句読点の置き方がゆっくりしていて、読んでいると独特の間がある。
+      <br><span class="post-tag tag-ie">🇮🇪 アイルランド</span>
+    </div>
+  </article>
+
+  <article class="post">
+    <div class="post-date">
+      <span class="month-day">01.07</span>
+      2025
+    </div>
+    <div class="post-body">
+      「quite」がアメリカ英語とイギリス英語でほぼ逆の意味になることに改めて気づいた。英: quite good ＝ かなり良い、米: quite good ＝ まあまあ良い。まだ反射的に使い分けられない。
+      <br><span class="post-tag tag-multi">🌐 英語全般</span>
+    </div>
+  </article>
+
+  <article class="post">
+    <div class="post-date">
+      <span class="month-day">01.03</span>
+      2025
+    </div>
+    <div class="post-body">
+      記憶だけでロンドンの街角スケッチを描いた。二階建てバスは描きやすいけど、テムズ川の橋がうまくいかない。ギャラリーに追加しました。
+      <br><span class="post-tag tag-uk">🇬🇧 イギリス</span>
+    </div>
+  </article>
+
+  <article class="post">
+    <div class="post-date">
+      <span class="month-day">01.01</span>
+      2025
+    </div>
+    <div class="post-body">
+      今年の目標：英語の本を月1冊読む。翻訳の勉強と並行させたい。まずはカナダ人作家の短編集から。
+      <br><span class="post-tag tag-ca">🇨🇦 カナダ</span>
+    </div>
+  </article>
+
+  <div class="year-divider">
+    <span class="year-label">2024</span>
+  </div>
+
+  <article class="post">
+    <div class="post-date">
+      <span class="month-day">12.28</span>
+      2024
+    </div>
+    <div class="post-body">
+      オーストラリア英語の "arvo"（afternoon）を初めて自然な文脈で聞いた。縮め方のセンスが独特で好き。
+      <br><span class="post-tag tag-au">🇦🇺 オーストラリア</span>
+    </div>
+  </article>
+
+  <article class="post">
+    <div class="post-date">
+      <span class="month-day">12.20</span>
+      2024
+    </div>
+    <div class="post-body">
+      アメリカのホリデーシーズンの文化を調べていた。"Happy Holidays" vs "Merry Christmas" の使い分けは、宗教よりも相手を知っているかどうかの話に近い気がする。
+      <br><span class="post-tag tag-us">🇺🇸 アメリカ</span>
+    </div>
+  </article>
+
+  <article class="post">
+    <div class="post-date">
+      <span class="month-day">12.12</span>
+      2024
+    </div>
+    <div class="post-body">
+      翻訳の授業で "understated humour" の訳し方を考えた。日本語に直すと何かが抜けてしまう。ニュアンスをどこで補うかがいつも難しい。
+      <br><span class="post-tag tag-uk">🇬🇧 イギリス</span>
+    </div>
+  </article>
+
+  <article class="post">
+    <div class="post-date">
+      <span class="month-day">12.05</span>
+      2024
+    </div>
+    <div class="post-body">
+      アメリカのコミック文化とイギリスのコミック文化の違いを少し調べた。ジャンルの棲み分けが日本の漫画とも全然違って面白い。
+      <br><span class="post-tag tag-multi">🌐 英語全般</span>
+    </div>
+  </article>
+
+  <article class="post">
+    <div class="post-date">
+      <span class="month-day">11.28</span>
+      2024
+    </div>
+    <div class="post-body">
+      このサイトを作り始めた。アメリカ文化だけじゃなくて英語圏全体を扱うサイトにしようと決めた。
+      <br><span class="post-tag tag-multi">🌐 英語全般</span>
+    </div>
+  </article>
+
+</main>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-logo">The Green Chronicle</div>
+    <p class="footer-sub">英語圏文化をゆるやかに探索する個人サイト。<br>日本在住の漫画家・Azalea72 による。</p>
+    <ul class="footer-links">
+      <li><a href="index.html">ホーム</a></li>
+      <li><a href="blog.html">ブログ</a></li>
+      <li><a href="gallery.html">ギャラリー</a></li>
+      <li><a href="about.html">このサイトについて</a></li>
+    </ul>
+    <p class="footer-copy">© 2025 Azalea72 · The Green Chronicle</p>
+  </div>
+</footer>
+
+<script>
+  function toggleMenu() {
+    document.getElementById('mobileMenu').classList.toggle('open');
+  }
+</script>
+</body>
+</html>
