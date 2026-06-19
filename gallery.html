@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ギャラリー | THE GREEN CHRONICLE</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --navy:   #1a4a6e;
+      --green:  #2d7a4f;
+      --red:    #b83232;
+      --cream:  #f8f7f4;
+      --ink:    #1c2b3a;
+      --muted:  #6b7c8d;
+      --border: #dde4ec;
+      --white:  #ffffff;
+    }
+
+    body {
+      font-family: 'Inter', 'Noto Sans JP', sans-serif;
+      background: var(--cream);
+      color: var(--ink);
+      font-size: 16px;
+      line-height: 1.7;
+    }
+
+    /* ─── NAV ─── */
+    nav {
+      background: var(--white);
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .nav-inner {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 0 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 56px;
+    }
+    .nav-logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--navy);
+      letter-spacing: 0.12em;
+      text-decoration: none;
+      text-transform: uppercase;
+    }
+    .nav-links {
+      display: flex;
+      gap: 28px;
+      list-style: none;
+    }
+    .nav-links a {
+      text-decoration: none;
+      font-size: 0.8rem;
+      font-weight: 500;
+      color: var(--muted);
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--green); }
+    .nav-links a.active { color: var(--navy); }
+
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+      background: none;
+      border: none;
+      padding: 4px;
+    }
+    .hamburger span {
+      display: block;
+      width: 22px;
+      height: 2px;
+      background: var(--navy);
+    }
+    .mobile-menu {
+      display: none;
+      background: var(--white);
+      border-top: 1px solid var(--border);
+      padding: 16px 24px 20px;
+    }
+    .mobile-menu.open { display: block; }
+    .mobile-menu a {
+      display: block;
+      padding: 10px 0;
+      text-decoration: none;
+      font-size: 0.88rem;
+      color: var(--ink);
+      border-bottom: 1px solid var(--border);
+    }
+    .mobile-menu a:last-child { border-bottom: none; }
+
+    /* ─── PAGE HEADER ─── */
+    .page-header {
+      max-width: 640px;
+      margin: 0 auto;
+      padding: 56px 24px 40px;
+      text-align: center;
+    }
+    .page-eyebrow {
+      font-size: 0.68rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--red);
+      font-weight: 500;
+      margin-bottom: 10px;
+    }
+    .page-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--navy);
+      margin-bottom: 12px;
+    }
+    .page-desc {
+      font-size: 0.86rem;
+      color: var(--muted);
+      font-weight: 300;
+      line-height: 1.8;
+    }
+    .page-rule {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      margin: 24px auto 0;
+    }
+    .page-rule::before,
+    .page-rule::after {
+      content: '';
+      display: block;
+      width: 60px;
+      height: 1px;
+      background: var(--border);
+    }
+    .dot-row { display: flex; gap: 6px; }
+    .dot-row span {
+      display: block;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+    }
+    .dot-row span:nth-child(1) { background: var(--navy); }
+    .dot-row span:nth-child(2) { background: var(--white); border: 1px solid var(--border); }
+    .dot-row span:nth-child(3) { background: var(--red); }
+    .dot-row span:nth-child(4) { background: var(--green); }
+
+    /* ─── FILTER TABS ─── */
+    .filter-wrap {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 0 24px 32px;
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .filter-btn {
+      padding: 6px 16px;
+      border: 1px solid var(--border);
+      background: var(--white);
+      border-radius: 2px;
+      font-size: 0.75rem;
+      font-weight: 500;
+      color: var(--muted);
+      cursor: pointer;
+      transition: all 0.18s;
+      letter-spacing: 0.04em;
+    }
+    .filter-btn:hover {
+      border-color: var(--navy);
+      color: var(--navy);
+    }
+    .filter-btn.active {
+      background: var(--navy);
+      border-color: var(--navy);
+      color: var(--white);
+    }
+
+    /* ─── GALLERY GRID ─── */
+    .gallery-wrap {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 0 24px 80px;
+    }
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+
+    /* card */
+    .card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      overflow: hidden;
+      cursor: pointer;
+      transition: box-shadow 0.2s, transform 0.2s;
+    }
+    .card:hover {
+      box-shadow: 0 6px 20px rgba(26,74,110,0.10);
+      transform: translateY(-3px);
+    }
+    .card.hidden { display: none; }
+
+    .card-img {
+      width: 100%;
+      aspect-ratio: 3 / 4;
+      object-fit: cover;
+      display: block;
+      background: var(--border);
+      /* placeholder color per category */
+    }
+    .card-img.placeholder {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2.4rem;
+    }
+    .card[data-cat="manga"]   .card-img { background: #e8f0f8; }
+    .card[data-cat="illust"]  .card-img { background: #e8f4ed; }
+    .card[data-cat="sketch"]  .card-img { background: #faeaea; }
+
+    .card-info {
+      padding: 12px 14px 14px;
+    }
+    .card-title {
+      font-size: 0.82rem;
+      font-weight: 500;
+      color: var(--ink);
+      margin-bottom: 3px;
+    }
+    .card-meta {
+      font-size: 0.7rem;
+      color: var(--muted);
+      font-weight: 300;
+    }
+    .card-tag {
+      display: inline-block;
+      margin-top: 7px;
+      font-size: 0.62rem;
+      letter-spacing: 0.06em;
+      padding: 2px 7px;
+      border-radius: 2px;
+      font-weight: 500;
+    }
+    .tag-manga  { background: #e8f0f8; color: var(--navy); }
+    .tag-illust { background: #e8f4ed; color: var(--green); }
+    .tag-sketch { background: #faeaea; color: var(--red); }
+
+    /* ─── LIGHTBOX ─── */
+    .lightbox {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(28, 43, 58, 0.88);
+      z-index: 200;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+    .lightbox.open { display: flex; }
+
+    .lb-inner {
+      background: var(--white);
+      border-radius: 4px;
+      max-width: 560px;
+      width: 100%;
+      overflow: hidden;
+      position: relative;
+    }
+    .lb-img-area {
+      width: 100%;
+      aspect-ratio: 3 / 4;
+      background: var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 4rem;
+    }
+    .lb-img-area img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+    .lb-body {
+      padding: 18px 20px 20px;
+    }
+    .lb-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--navy);
+      margin-bottom: 4px;
+    }
+    .lb-meta {
+      font-size: 0.75rem;
+      color: var(--muted);
+      font-weight: 300;
+      margin-bottom: 10px;
+    }
+    .lb-desc {
+      font-size: 0.83rem;
+      color: var(--ink);
+      font-weight: 300;
+      line-height: 1.8;
+    }
+    .lb-close {
+      position: absolute;
+      top: 12px;
+      right: 14px;
+      background: rgba(28,43,58,0.55);
+      border: none;
+      color: var(--white);
+      font-size: 1.1rem;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      line-height: 1;
+    }
+    .lb-close:hover { background: rgba(28,43,58,0.85); }
+
+    /* nav arrows */
+    .lb-prev, .lb-next {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(28,43,58,0.45);
+      border: none;
+      color: var(--white);
+      font-size: 1.2rem;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .lb-prev { left: 10px; }
+    .lb-next { right: 10px; }
+    .lb-prev:hover, .lb-next:hover { background: rgba(28,43,58,0.8); }
+
+    /* ─── EMPTY STATE ─── */
+    .empty-state {
+      display: none;
+      text-align: center;
+      padding: 60px 0;
+      color: var(--muted);
+      font-size: 0.88rem;
+      font-weight: 300;
+    }
+    .empty-state.visible { display: block; }
+
+    /* ─── FOOTER ─── */
+    footer {
+      background: var(--ink);
+      color: #8a9baa;
+      padding: 40px 24px;
+      text-align: center;
+    }
+    .footer-inner { max-width: 960px; margin: 0 auto; }
+    .footer-logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.1rem;
+      color: var(--white);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+    .footer-sub { font-size: 0.75rem; font-weight: 300; line-height: 1.7; }
+    .footer-links {
+      margin-top: 18px;
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      list-style: none;
+    }
+    .footer-links a {
+      font-size: 0.72rem;
+      color: #8a9baa;
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .footer-links a:hover { color: var(--white); }
+    .footer-copy {
+      margin-top: 20px;
+      font-size: 0.7rem;
+      color: #5a6b78;
+    }
+
+    /* ─── RESPONSIVE ─── */
+    @media (max-width: 700px) {
+      .nav-links { display: none; }
+      .hamburger { display: flex; }
+      .gallery-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+    }
+    @media (max-width: 400px) {
+      .gallery-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-inner">
+    <a class="nav-logo" href="index.html">The Green Chronicle</a>
+    <ul class="nav-links">
+      <li><a href="index.html">ホーム</a></li>
+      <li><a href="blog.html">ブログ</a></li>
+      <li><a href="gallery.html" class="active">ギャラリー</a></li>
+      <li><a href="about.html">このサイトについて</a></li>
+    </ul>
+    <button class="hamburger" onclick="toggleMenu()" aria-label="メニュー">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+  <div class="mobile-menu" id="mobileMenu">
+    <a href="index.html">ホーム</a>
+    <a href="blog.html">ブログ</a>
+    <a href="gallery.html">ギャラリー</a>
+    <a href="about.html">このサイトについて</a>
+  </div>
+</nav>
+
+<!-- PAGE HEADER -->
+<header class="page-header">
+  <p class="page-eyebrow">Gallery</p>
+  <h1 class="page-title">ギャラリー</h1>
+  <p class="page-desc">英語圏にインスパイアされた漫画・イラスト・スケッチ。</p>
+  <div class="page-rule">
+    <div class="dot-row">
+      <span></span><span></span><span></span><span></span>
+    </div>
+  </div>
+</header>
+
+<!-- FILTER TABS -->
+<div class="filter-wrap">
+  <button class="filter-btn active" data-filter="all">すべて</button>
+  <button class="filter-btn" data-filter="manga">漫画</button>
+  <button class="filter-btn" data-filter="illust">イラスト</button>
+  <button class="filter-btn" data-filter="sketch">スケッチ</button>
+</div>
+
+<!-- GALLERY GRID -->
+<main class="gallery-wrap">
+  <div class="gallery-grid" id="galleryGrid">
+
+    <div class="card" data-cat="manga"
+         data-title="ロンドンの午後"
+         data-meta="漫画 · 2025.01"
+         data-desc="テムズ川沿いを歩く女の子の話。霧の中の街並みを描きたくて描いた1ページ漫画。"
+         data-emoji="📖">
+      <div class="card-img placeholder">📖</div>
+      <div class="card-info">
+        <div class="card-title">ロンドンの午後</div>
+        <div class="card-meta">漫画 · 2025.01</div>
+        <span class="card-tag tag-manga">漫画</span>
+      </div>
+    </div>
+
+    <div class="card" data-cat="illust"
+         data-title="ダブリンの街角"
+         data-meta="イラスト · 2025.01"
+         data-desc="アイルランドの短編小説を読んでいて描いたイラスト。石畳の路地と古い看板。"
+         data-emoji="🎨">
+      <div class="card-img placeholder">🎨</div>
+      <div class="card-info">
+        <div class="card-title">ダブリンの街角</div>
+        <div class="card-meta">イラスト · 2025.01</div>
+        <span class="card-tag tag-illust">イラスト</span>
+      </div>
+    </div>
+
+    <div class="card" data-cat="sketch"
+         data-title="ロンドンバス（習作）"
+         data-meta="スケッチ · 2025.01"
+         data-desc="記憶だけで描いたロンドンの二階建てバス。車体の赤が難しい。"
+         data-emoji="✏️">
+      <div class="card-img placeholder">✏️</div>
+      <div class="card-info">
+        <div class="card-title">ロンドンバス（習作）</div>
+        <div class="card-meta">スケッチ · 2025.01</div>
+        <span class="card-tag tag-sketch">スケッチ</span>
+      </div>
+    </div>
+
+    <div class="card" data-cat="illust"
+         data-title="ニューヨークの朝"
+         data-meta="イラスト · 2024.12"
+         data-desc="ブルックリンの朝焼けをイメージしたイラスト。ビルのシルエットと水タンク。"
+         data-emoji="🌆">
+      <div class="card-img placeholder">🌆</div>
+      <div class="card-info">
+        <div class="card-title">ニューヨークの朝</div>
+        <div class="card-meta">イラスト · 2024.12</div>
+        <span class="card-tag tag-illust">イラスト</span>
+      </div>
+    </div>
+
+    <div class="card" data-cat="manga"
+         data-title="図書館の女の子"
+         data-meta="漫画 · 2024.12"
+         data-desc="英語の本を読む女の子の4コマ。翻訳の授業がネタ元。"
+         data-emoji="📚">
+      <div class="card-img placeholder">📚</div>
+      <div class="card-info">
+        <div class="card-title">図書館の女の子</div>
+        <div class="card-meta">漫画 · 2024.12</div>
+        <span class="card-tag tag-manga">漫画</span>
+      </div>
+    </div>
+
+    <div class="card" data-cat="sketch"
+         data-title="カフェのスケッチ"
+         data-meta="スケッチ · 2024.12"
+         data-desc="ロンドンのカフェを想像して描いたクイックスケッチ。15分くらいで描いた。"
+         data-emoji="☕">
+      <div class="card-img placeholder">☕</div>
+      <div class="card-info">
+        <div class="card-title">カフェのスケッチ</div>
+        <div class="card-meta">スケッチ · 2024.12</div>
+        <span class="card-tag tag-sketch">スケッチ</span>
+      </div>
+    </div>
+
+    <div class="card" data-cat="illust"
+         data-title="オーロラ（カナダ）"
+         data-meta="イラスト · 2024.11"
+         data-desc="カナダの夜空をイメージした水彩風イラスト。オーロラの色が好き。"
+         data-emoji="🌌">
+      <div class="card-img placeholder">🌌</div>
+      <div class="card-info">
+        <div class="card-title">オーロラ（カナダ）</div>
+        <div class="card-meta">イラスト · 2024.11</div>
+        <span class="card-tag tag-illust">イラスト</span>
+      </div>
+    </div>
+
+    <div class="card" data-cat="manga"
+         data-title="英語の授業"
+         data-meta="漫画 · 2024.11"
+         data-desc="翻訳の授業の日常をゆるく漫画にした。先生のセリフが毎回面白い。"
+         data-emoji="🖊️">
+      <div class="card-img placeholder">🖊️</div>
+      <div class="card-info">
+        <div class="card-title">英語の授業</div>
+        <div class="card-meta">漫画 · 2024.11</div>
+        <span class="card-tag tag-manga">漫画</span>
+      </div>
+    </div>
+
+    <div class="card" data-cat="sketch"
+         data-title="シドニー港（メモ書き）"
+         data-meta="スケッチ · 2024.11"
+         data-desc="オペラハウスを描こうとして断念したやつ。外形だけでもけっこう難しい。"
+         data-emoji="🏛️">
+      <div class="card-img placeholder">🏛️</div>
+      <div class="card-info">
+        <div class="card-title">シドニー港（メモ書き）</div>
+        <div class="card-meta">スケッチ · 2024.11</div>
+        <span class="card-tag tag-sketch">スケッチ</span>
+      </div>
+    </div>
+
+  </div>
+  <div class="empty-state" id="emptyState">該当する作品がありません。</div>
+</main>
+
+<!-- LIGHTBOX -->
+<div class="lightbox" id="lightbox" onclick="closeLightboxOutside(event)">
+  <div class="lb-inner" id="lbInner">
+    <button class="lb-close" onclick="closeLightbox()">✕</button>
+    <button class="lb-prev" onclick="shiftLightbox(-1)">&#8592;</button>
+    <button class="lb-next" onclick="shiftLightbox(1)">&#8594;</button>
+    <div class="lb-img-area" id="lbImg"></div>
+    <div class="lb-body">
+      <div class="lb-title" id="lbTitle"></div>
+      <div class="lb-meta"  id="lbMeta"></div>
+      <div class="lb-desc"  id="lbDesc"></div>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-logo">The Green Chronicle</div>
+    <p class="footer-sub">英語圏文化をゆるやかに探索する個人サイト。<br>日本在住の漫画家・Azalea72 による。</p>
+    <ul class="footer-links">
+      <li><a href="index.html">ホーム</a></li>
+      <li><a href="blog.html">ブログ</a></li>
+      <li><a href="gallery.html">ギャラリー</a></li>
+      <li><a href="about.html">このサイトについて</a></li>
+    </ul>
+    <p class="footer-copy">© 2025 Azalea72 · The Green Chronicle</p>
+  </div>
+</footer>
+
+<script>
+  // ─── FILTER ───
+  const filterBtns = document.querySelectorAll('.filter-btn');
+  const cards      = document.querySelectorAll('.card');
+  const emptyState = document.getElementById('emptyState');
+
+  filterBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      filterBtns.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      const f = btn.dataset.filter;
+      let visible = 0;
+      cards.forEach(c => {
+        const show = f === 'all' || c.dataset.cat === f;
+        c.classList.toggle('hidden', !show);
+        if (show) visible++;
+      });
+      emptyState.classList.toggle('visible', visible === 0);
+    });
+  });
+
+  // ─── LIGHTBOX ───
+  let currentIndex = 0;
+  let visibleCards = [];
+
+  function getVisibleCards() {
+    return [...cards].filter(c => !c.classList.contains('hidden'));
+  }
+
+  function openLightbox(card) {
+    visibleCards = getVisibleCards();
+    currentIndex = visibleCards.indexOf(card);
+    renderLightbox();
+    document.getElementById('lightbox').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function renderLightbox() {
+    const c = visibleCards[currentIndex];
+    document.getElementById('lbImg').textContent   = c.dataset.emoji;
+    document.getElementById('lbTitle').textContent = c.dataset.title;
+    document.getElementById('lbMeta').textContent  = c.dataset.meta;
+    document.getElementById('lbDesc').textContent  = c.dataset.desc;
+  }
+
+  function shiftLightbox(dir) {
+    currentIndex = (currentIndex + dir + visibleCards.length) % visibleCards.length;
+    renderLightbox();
+  }
+
+  function closeLightbox() {
+    document.getElementById('lightbox').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  function closeLightboxOutside(e) {
+    if (e.target === document.getElementById('lightbox')) closeLightbox();
+  }
+
+  cards.forEach(card => {
+    card.addEventListener('click', () => openLightbox(card));
+  });
+
+  document.addEventListener('keydown', e => {
+    if (!document.getElementById('lightbox').classList.contains('open')) return;
+    if (e.key === 'Escape')      closeLightbox();
+    if (e.key === 'ArrowLeft')   shiftLightbox(-1);
+    if (e.key === 'ArrowRight')  shiftLightbox(1);
+  });
+
+  // ─── HAMBURGER ───
+  function toggleMenu() {
+    document.getElementById('mobileMenu').classList.toggle('open');
+  }
+</script>
+</body>
+</html>
