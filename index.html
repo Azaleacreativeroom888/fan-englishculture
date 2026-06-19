@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>THE GREEN CHRONICLE</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --navy:   #1a4a6e;
+      --green:  #2d7a4f;
+      --red:    #b83232;
+      --cream:  #f8f7f4;
+      --ink:    #1c2b3a;
+      --muted:  #6b7c8d;
+      --border: #dde4ec;
+      --white:  #ffffff;
+    }
+
+    body {
+      font-family: 'Inter', 'Noto Sans JP', sans-serif;
+      background: var(--cream);
+      color: var(--ink);
+      font-size: 16px;
+      line-height: 1.7;
+    }
+
+    /* ─── NAV ─── */
+    nav {
+      background: var(--white);
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .nav-inner {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 0 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 56px;
+    }
+    .nav-logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--navy);
+      letter-spacing: 0.12em;
+      text-decoration: none;
+      text-transform: uppercase;
+    }
+    .nav-links {
+      display: flex;
+      gap: 28px;
+      list-style: none;
+    }
+    .nav-links a {
+      text-decoration: none;
+      font-size: 0.8rem;
+      font-weight: 500;
+      color: var(--muted);
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--green); }
+
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+      background: none;
+      border: none;
+      padding: 4px;
+    }
+    .hamburger span {
+      display: block;
+      width: 22px;
+      height: 2px;
+      background: var(--navy);
+    }
+    .mobile-menu {
+      display: none;
+      background: var(--white);
+      border-top: 1px solid var(--border);
+      padding: 16px 24px 20px;
+    }
+    .mobile-menu.open { display: block; }
+    .mobile-menu a {
+      display: block;
+      padding: 10px 0;
+      text-decoration: none;
+      font-size: 0.88rem;
+      color: var(--ink);
+      border-bottom: 1px solid var(--border);
+    }
+    .mobile-menu a:last-child { border-bottom: none; }
+
+    /* ─── HERO ─── */
+    .hero {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 72px 24px 56px;
+      text-align: center;
+    }
+    .hero-eyebrow {
+      display: inline-block;
+      font-size: 0.72rem;
+      letter-spacing: 0.16em;
+      color: var(--green);
+      font-weight: 500;
+      margin-bottom: 20px;
+    }
+    .hero-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2.4rem, 6vw, 4rem);
+      font-weight: 700;
+      line-height: 1.12;
+      color: var(--navy);
+      margin-bottom: 8px;
+      letter-spacing: -0.01em;
+    }
+    .hero-rule {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      margin: 20px auto 28px;
+    }
+    .hero-rule::before,
+    .hero-rule::after {
+      content: '';
+      display: block;
+      width: 80px;
+      height: 1px;
+      background: var(--border);
+    }
+    .dot-row { display: flex; gap: 6px; }
+    .dot-row span {
+      display: block;
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+    }
+    .dot-row span:nth-child(1) { background: var(--navy); }
+    .dot-row span:nth-child(2) { background: var(--white); border: 1px solid var(--border); }
+    .dot-row span:nth-child(3) { background: var(--red); }
+    .dot-row span:nth-child(4) { background: var(--green); }
+
+    .hero-sub {
+      font-size: 0.95rem;
+      color: var(--muted);
+      max-width: 520px;
+      margin: 0 auto 36px;
+      font-weight: 300;
+      line-height: 1.9;
+    }
+    .hero-cta {
+      display: inline-block;
+      padding: 11px 28px;
+      background: var(--green);
+      color: var(--white);
+      text-decoration: none;
+      font-size: 0.82rem;
+      letter-spacing: 0.06em;
+      font-weight: 500;
+      border-radius: 2px;
+      transition: background 0.2s;
+    }
+    .hero-cta:hover { background: var(--navy); }
+
+    /* ─── SHARED ─── */
+    .section-label {
+      font-size: 0.68rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--red);
+      font-weight: 500;
+      margin-bottom: 8px;
+    }
+    .section-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.55rem;
+      font-weight: 700;
+      color: var(--navy);
+      margin-bottom: 6px;
+    }
+    .section-desc {
+      font-size: 0.86rem;
+      color: var(--muted);
+      font-weight: 300;
+    }
+
+    /* ─── ABOUT STRIP ─── */
+    .about-strip {
+      background: var(--navy);
+      color: var(--white);
+      padding: 52px 24px;
+    }
+    .about-inner {
+      max-width: 960px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 48px;
+      align-items: center;
+    }
+    .about-text .section-label { color: #7db8e8; }
+    .about-text .section-title { color: var(--white); margin-bottom: 14px; }
+    .about-body {
+      font-size: 0.88rem;
+      color: #b8cdd9;
+      line-height: 1.9;
+      font-weight: 300;
+    }
+    .about-link {
+      display: inline-block;
+      margin-top: 20px;
+      font-size: 0.78rem;
+      color: var(--white);
+      text-decoration: none;
+      border-bottom: 1px solid #7db8e8;
+      padding-bottom: 1px;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+    .about-link:hover { color: #7db8e8; }
+    .flags-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 10px;
+    }
+    .flag-card {
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 4px;
+      padding: 14px 8px;
+      text-align: center;
+    }
+    .flag-emoji { font-size: 1.6rem; display: block; margin-bottom: 4px; }
+    .flag-name {
+      font-size: 0.6rem;
+      letter-spacing: 0.06em;
+      color: #7db8e8;
+      font-weight: 500;
+    }
+
+    /* ─── TOPICS ─── */
+    .topics-section {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 64px 24px;
+    }
+    .topics-header { margin-bottom: 36px; }
+    .topics-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+    .topic-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 28px 24px;
+      transition: box-shadow 0.2s, transform 0.2s;
+    }
+    .topic-card:hover {
+      box-shadow: 0 4px 16px rgba(26,74,110,0.08);
+      transform: translateY(-2px);
+    }
+    .topic-icon { font-size: 1.4rem; margin-bottom: 12px; }
+    .topic-name {
+      font-size: 0.95rem;
+      font-weight: 500;
+      color: var(--navy);
+      margin-bottom: 6px;
+    }
+    .topic-desc {
+      font-size: 0.8rem;
+      color: var(--muted);
+      line-height: 1.8;
+      font-weight: 300;
+    }
+    .topic-tag {
+      display: inline-block;
+      margin-top: 12px;
+      font-size: 0.64rem;
+      letter-spacing: 0.06em;
+      padding: 2px 8px;
+      border-radius: 2px;
+      font-weight: 500;
+    }
+    .tag-us   { background: #e8f0f8; color: var(--navy); }
+    .tag-uk   { background: #e8f4ed; color: var(--green); }
+    .tag-multi{ background: #faeaea; color: var(--red); }
+
+    /* ─── RECENT BLOG ─── */
+    .blog-section {
+      background: var(--white);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      padding: 56px 24px;
+    }
+    .blog-inner { max-width: 960px; margin: 0 auto; }
+    .blog-header {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      margin-bottom: 32px;
+    }
+    .blog-all {
+      font-size: 0.76rem;
+      color: var(--green);
+      text-decoration: none;
+      font-weight: 500;
+      border-bottom: 1px solid var(--green);
+      padding-bottom: 1px;
+    }
+    .blog-list { list-style: none; }
+    .blog-item {
+      display: flex;
+      gap: 24px;
+      align-items: baseline;
+      padding: 14px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .blog-item:last-child { border-bottom: none; }
+    .blog-date {
+      font-size: 0.72rem;
+      color: var(--muted);
+      white-space: nowrap;
+      min-width: 76px;
+      letter-spacing: 0.04em;
+    }
+    .blog-text {
+      font-size: 0.88rem;
+      color: var(--ink);
+      font-weight: 300;
+    }
+
+    /* ─── GALLERY PREVIEW ─── */
+    .gallery-section {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 64px 24px;
+    }
+    .gallery-header {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      margin-bottom: 32px;
+    }
+    .gallery-link {
+      font-size: 0.76rem;
+      color: var(--green);
+      text-decoration: none;
+      font-weight: 500;
+      border-bottom: 1px solid var(--green);
+      padding-bottom: 1px;
+    }
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+    }
+    .gallery-placeholder {
+      aspect-ratio: 3/4;
+      background: var(--border);
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.8rem;
+      color: var(--muted);
+      transition: opacity 0.2s;
+    }
+    .gallery-placeholder:hover { opacity: 0.7; }
+
+    /* ─── FOOTER ─── */
+    footer {
+      background: var(--ink);
+      color: #8a9baa;
+      padding: 40px 24px;
+      text-align: center;
+    }
+    .footer-inner { max-width: 960px; margin: 0 auto; }
+    .footer-logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.1rem;
+      color: var(--white);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+    .footer-sub { font-size: 0.75rem; font-weight: 300; line-height: 1.7; }
+    .footer-links {
+      margin-top: 18px;
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      list-style: none;
+    }
+    .footer-links a {
+      font-size: 0.72rem;
+      color: #8a9baa;
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .footer-links a:hover { color: var(--white); }
+    .footer-copy {
+      margin-top: 20px;
+      font-size: 0.7rem;
+      color: #5a6b78;
+    }
+
+    /* ─── RESPONSIVE ─── */
+    @media (max-width: 700px) {
+      .nav-links { display: none; }
+      .hamburger { display: flex; }
+      .about-inner { grid-template-columns: 1fr; gap: 32px; }
+      .topics-grid { grid-template-columns: 1fr 1fr; }
+      .gallery-grid { grid-template-columns: repeat(2, 1fr); }
+      .blog-header { flex-direction: column; gap: 10px; align-items: flex-start; }
+    }
+    @media (max-width: 480px) {
+      .topics-grid { grid-template-columns: 1fr; }
+      .flags-grid { grid-template-columns: repeat(3, 1fr); }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-inner">
+    <a class="nav-logo" href="index.html">The Green Chronicle</a>
+    <ul class="nav-links">
+      <li><a href="index.html">ホーム</a></li>
+      <li><a href="blog.html">ブログ</a></li>
+      <li><a href="gallery.html">ギャラリー</a></li>
+      <li><a href="about.html">このサイトについて</a></li>
+    </ul>
+    <button class="hamburger" onclick="toggleMenu()" aria-label="メニュー">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+  <div class="mobile-menu" id="mobileMenu">
+    <a href="index.html">ホーム</a>
+    <a href="blog.html">ブログ</a>
+    <a href="gallery.html">ギャラリー</a>
+    <a href="about.html">このサイトについて</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<header class="hero">
+  <span class="hero-eyebrow">英語圏文化ファンサイト</span>
+  <h1 class="hero-title">The Green Chronicle</h1>
+  <div class="hero-rule">
+    <div class="dot-row">
+      <span></span><span></span><span></span><span></span>
+    </div>
+  </div>
+  <p class="hero-sub">
+    アメリカ、イギリス、カナダ、オーストラリア、アイルランド——<br>
+    英語を話す国々の文化を、日本語でゆるやかに記録するサイトです。<br>
+    言葉、物語、イラスト、そして気になったもの。
+  </p>
+  <a class="hero-cta" href="blog.html">ブログを読む</a>
+</header>
+
+<!-- ABOUT STRIP -->
+<section class="about-strip">
+  <div class="about-inner">
+    <div class="about-text">
+      <p class="section-label">About</p>
+      <h2 class="section-title">漫画家による英語圏文化観察ノート</h2>
+      <p class="about-body">
+        日本在住の漫画家・イラストレーターが、英語と英語圏の文化をゆっくり探索するサイトです。アメリカだけでなく、英国の機知、アイルランドの温かさ、カナダの誠実さ、オーストラリアの率直さなど、英語圏の広い世界を少しずつ記録しています。
+      </p>
+      <a class="about-link" href="about.html">このサイトについて詳しく →</a>
+    </div>
+    <div class="flags-grid">
+      <div class="flag-card">
+        <span class="flag-emoji">🇺🇸</span>
+        <span class="flag-name">アメリカ</span>
+      </div>
+      <div class="flag-card">
+        <span class="flag-emoji">🇬🇧</span>
+        <span class="flag-name">イギリス</span>
+      </div>
+      <div class="flag-card">
+        <span class="flag-emoji">🇨🇦</span>
+        <span class="flag-name">カナダ</span>
+      </div>
+      <div class="flag-card">
+        <span class="flag-emoji">🇦🇺</span>
+        <span class="flag-name">オーストラリア</span>
+      </div>
+      <div class="flag-card">
+        <span class="flag-emoji">🇮🇪</span>
+        <span class="flag-name">アイルランド</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TOPICS -->
+<section class="topics-section">
+  <div class="topics-header">
+    <p class="section-label">Topics</p>
+    <h2 class="section-title">話題のカテゴリ</h2>
+    <p class="section-desc">気になること、勉強したこと、描いたもの。</p>
+  </div>
+  <div class="topics-grid">
+    <div class="topic-card">
+      <div class="topic-icon">📖</div>
+      <div class="topic-name">言葉と表現</div>
+      <p class="topic-desc">慣用句やスラング、ニュアンスの違い。アメリカ英語とイギリス英語の意外なギャップなど。</p>
+      <span class="topic-tag tag-multi">全地域</span>
+    </div>
+    <div class="topic-card">
+      <div class="topic-icon">🎬</div>
+      <div class="topic-name">映画・ドラマ</div>
+      <p class="topic-desc">英語圏の文化を形づくった作品たち。観ながら感じたことを、ゆるく書き留めています。</p>
+      <span class="topic-tag tag-us">米・英</span>
+    </div>
+    <div class="topic-card">
+      <div class="topic-icon">✏️</div>
+      <div class="topic-name">イラスト・漫画</div>
+      <p class="topic-desc">英語圏にインスパイアされたファンアートやオリジナル漫画。ギャラリーで公開中。</p>
+      <span class="topic-tag tag-multi">全地域</span>
+    </div>
+    <div class="topic-card">
+      <div class="topic-icon">🏙️</div>
+      <div class="topic-name">都市と場所</div>
+      <p class="topic-desc">ニューヨークからダブリンまで——本や映画で知った街の、個人的なイメージ。</p>
+      <span class="topic-tag tag-uk">英・愛</span>
+    </div>
+    <div class="topic-card">
+      <div class="topic-icon">📚</div>
+      <div class="topic-name">文学</div>
+      <p class="topic-desc">小説、詩、民話。翻訳者の視点で読んで、特に心に残ったテキストについて。</p>
+      <span class="topic-tag tag-uk">英・加・豪</span>
+    </div>
+    <div class="topic-card">
+      <div class="topic-icon">🌐</div>
+      <div class="topic-name">翻訳メモ</div>
+      <p class="topic-desc">英日翻訳の勉強記録。言語の間にある「隙間」が、いちばん面白いと思っています。</p>
+      <span class="topic-tag tag-multi">全地域</span>
+    </div>
+  </div>
+</section>
+
+<!-- RECENT BLOG -->
+<section class="blog-section">
+  <div class="blog-inner">
+    <div class="blog-header">
+      <div>
+        <p class="section-label">Latest</p>
+        <h2 class="section-title">最近のブログ</h2>
+      </div>
+      <a class="blog-all" href="blog.html">すべて見る →</a>
+    </div>
+    <ul class="blog-list">
+      <li class="blog-item">
+        <span class="blog-date">2025.01.10</span>
+        <span class="blog-text">アイルランドの短編小説集を読み始めた。文章のリズムがアメリカの散文とかなり違う。</span>
+      </li>
+      <li class="blog-item">
+        <span class="blog-date">2025.01.07</span>
+        <span class="blog-text">「quite」がアメリカ英語とイギリス英語でほぼ逆の意味になることに気づいた。まだ慣れない。</span>
+      </li>
+      <li class="blog-item">
+        <span class="blog-date">2025.01.03</span>
+        <span class="blog-text">記憶でロンドンの街角スケッチを描いた。ギャラリーに追加しました。</span>
+      </li>
+    </ul>
+  </div>
+</section>
+
+<!-- GALLERY PREVIEW -->
+<section class="gallery-section">
+  <div class="gallery-header">
+    <div>
+      <p class="section-label">Gallery</p>
+      <h2 class="section-title">ギャラリー</h2>
+    </div>
+    <a class="gallery-link" href="gallery.html">すべて見る →</a>
+  </div>
+  <div class="gallery-grid">
+    <div class="gallery-placeholder">🎨</div>
+    <div class="gallery-placeholder">✏️</div>
+    <div class="gallery-placeholder">📖</div>
+    <div class="gallery-placeholder">🌿</div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-logo">The Green Chronicle</div>
+    <p class="footer-sub">英語圏文化をゆるやかに探索する個人サイト。<br>日本在住の漫画家・Azalea72 による。</p>
+    <ul class="footer-links">
+      <li><a href="index.html">ホーム</a></li>
+      <li><a href="blog.html">ブログ</a></li>
+      <li><a href="gallery.html">ギャラリー</a></li>
+      <li><a href="about.html">このサイトについて</a></li>
+    </ul>
+    <p class="footer-copy">© 2025 Azalea72 · The Green Chronicle</p>
+  </div>
+</footer>
+
+<script>
+  function toggleMenu() {
+    document.getElementById('mobileMenu').classList.toggle('open');
+  }
+</script>
+</body>
+</html>
